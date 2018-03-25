@@ -1,0 +1,56 @@
+<resources>
+    <!-- Application and UI titles. -->
+    <string name="app_name">Popular Movies</string>
+    <string name="app_name_and_version">Popular Movies Stage 1</string>
+    <string name="app_details_layout_name">Movie Detalis</string>
+
+    <!-- Keys -->
+    <string name="key_sort_order" translatable="false">sortorder</string>
+    <string name="key_gridview_position" translatable="false">gridposition</string>
+    <string name="key_parcelable_array" translatable="false">parcelablearray</string>
+    <string name="key_intent_details" translatable="false">movieobject</string>
+
+    <!-- Toast messge -->
+    <string name="msg_need_connection">The application needs network connection.</string>
+
+    <!-- TheMovieDb API related strings -->
+    <string name="api_location_base" translatable="false">http://api.themoviedb.org/3/movie/</string>
+    <string name="api_request_method" translatable="false">GET</string>
+    <string name="api_add_parameter" translatable="false">\?api_key=</string>
+
+    <!-- TheMovieDb API JSON tag strings -->
+    <string name="tag_json_result" translatable="false">results</string>
+    <string name="tag_json_vote_average" translatable="false">vote_average</string>
+    <string name="tag_json_title" translatable="false">title</string>
+    <string name="tag_json_poster_path" translatable="false">poster_path</string>
+    <string name="tag_json_original_title" translatable="false">original_title</string>
+    <string name="tag_json_overview" translatable="false">overview</string>
+    <string name="tag_json_release_date" translatable="false">release_date</string>
+
+    <!-- TheMovieDb images -->
+    <string name="tmdb_image_location_base" translatable="false">http://image.tmdb.org/t/p/</string>
+    <string name="tmdb_image_resolution_path" translatable="false">w185/</string>
+
+    <!-- Sort order labels -->
+    <string-array name="sort_order_values">
+        <item>Most popular first</item>
+        <item>Highest rated first</item>
+    </string-array>
+
+    <!-- Sort order directories -->
+    <string-array name="sort_order_path" translatable="false">
+        <item>popular</item>
+        <item>top_rated</item>
+    </string-array>
+
+    <!-- Details Activity's texts -->
+    <string name="cd_image_poster">Poster picture of te selected movie</string>
+    <string name="label_release_date">Release date</string>
+    <string name="lavel_voted_average">Voted average</string>
+
+    <!-- Details Activity error messages -->
+    <string name="error_title">Neither title nor original title!</string>
+    <string name="error_release_date">No release date!</string>
+    <string name="error_vote_average">No vote information!</string>
+    <string name="error_overview">No overview text!</string>
+</resources>

@@ -1,0 +1,64 @@
+<resources>
+
+    <!-- MainActivitye themes -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">#ff9955</item>
+        <item name="colorPrimaryDark">#dd7700</item>
+        <item name="colorAccent">#0077ff</item>
+        <item name="android:colorBackground">#202020</item>
+    </style>
+
+    <style name="MainToolbar" parent="Base.ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:background">#ff9955</item>
+    </style>
+
+    <!-- DetailsActivity themes -->
+    <style name="AppThemeLight" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">#ff9955</item>
+        <item name="colorPrimaryDark">#dd7700</item>
+        <item name="colorAccent">#0077ff</item>
+        <item name="android:background">#f0f0f0</item>
+    </style>
+
+    <style name="DetailsToolbar" parent="Base.ThemeOverlay.AppCompat.ActionBar">
+        <item name="android:background">#ff9955</item>
+    </style>
+
+    <style name="TextViewTitle" parent="Base.ThemeOverlay.AppCompat">
+        <item name="android:background">#000000</item>
+        <item name="android:textColor">#ff9955</item>
+        <item name="android:padding">8dp</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextViewOriginalTitle" parent="Base.ThemeOverlay.AppCompat">
+        <item name="android:background">#000000</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:padding">8dp</item>
+        <item name="android:textSize">24sp</item>
+    </style>
+
+    <style name="ImagePoster" parent="Base.ThemeOverlay.AppCompat">
+        <item name="android:padding">0dp</item>
+        <item name="android:background">#000000</item>
+    </style>
+
+    <style name="TextViewLabels" parent="Base.ThemeOverlay.AppCompat">
+        <item name="android:background">#e0e0e0</item>
+        <item name="android:textColor">#404040</item>
+        <item name="android:padding">3dp</item>
+    </style>
+
+    <style name="TextViewValues" parent="Base.ThemeOverlay.AppCompat">
+        <item name="android:textStyle">bold</item>
+        <item name="android:padding">3dp</item>
+    </style>
+
+    <style name="TextViewOverview" parent="Base.ThemeOverlay.AppCompat">
+        <item name="android:padding">6dp</item>
+    </style>
+
+</resources>

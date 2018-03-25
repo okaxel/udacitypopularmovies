@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:theme="@style/AppThemeLight"
+    tools:context="hu.drorszagkriszaxel.popularmovies.DetailsActivity" >
+
+    <android.support.v7.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tolbar_details"
+        app:title="@string/app_details_layout_name"
+        android:theme="@style/DetailsToolbar"/>
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/tolbar_details"
+        android:id="@+id/sv_info_zone">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/ll_content_zone">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_title"
+                android:theme="@style/TextViewTitle"
+                android:textAlignment="center"
+                tools:text="Title"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_original_title"
+                android:theme="@style/TextViewOriginalTitle"
+                android:textAlignment="viewEnd"
+                android:gravity="end"
+                tools:text="Original Title"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:id="@+id/ll_image_zone">
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:id="@+id/image_poster"
+                    android:theme="@style/ImagePoster"
+                    android:contentDescription="@string/cd_image_poster"/>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:id="@+id/ll_info_zone">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/tv_label_release_date"
+                        android:theme="@style/TextViewLabels"
+                        android:text="@string/label_release_date"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/tv_value_release_date"
+                        android:theme="@style/TextViewValues"
+                        android:textAlignment="viewEnd"
+                        android:gravity="end"
+                        tools:text="Release date value"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/tv_label_vote_average"
+                        android:theme="@style/TextViewLabels"
+                        android:text="@string/lavel_voted_average"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/tv_value_vote_average"
+                        android:theme="@style/TextViewValues"
+                        android:textAlignment="viewEnd"
+                        android:gravity="end"
+                        tools:text="Vote average value"/>
+                </LinearLayout>
+            </LinearLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_overview"
+                android:theme="@style/TextViewOverview"
+                tools:text="Overview"/>
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+</android.support.constraint.ConstraintLayout>

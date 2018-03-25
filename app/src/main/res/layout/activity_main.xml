@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="hu.drorszagkriszaxel.popularmovies.MainActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tolbar_main"
+        app:title="@string/app_name"
+        android:theme="@style/MainToolbar">
+
+        <android.support.v7.widget.AppCompatSpinner
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            android:id="@+id/spinner_sort" />
+
+    </android.support.v7.widget.Toolbar>
+
+    <GridView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/tolbar_main"
+        android:id="@+id/grid_movies"
+        android:numColumns="auto_fit" />
+
+</android.support.constraint.ConstraintLayout>
