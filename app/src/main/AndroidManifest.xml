@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     package="hu.drorszagkriszaxel.popularmovies">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -27,6 +26,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
+
+        <!-- My little ContentProvider. -->
+        <provider
+            android:authorities="hu.drorszagkriszaxel.popularmovies.datahandling.MovieProvider"
+            android:name=".datahandling.MovieProvider"
+            android:exported="false"/>
+
     </application>
 
 </manifest>

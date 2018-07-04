@@ -8,22 +8,24 @@ import android.os.Parcelable;
  *
  * Movie object creation.
  */
+
 public class Movie implements Parcelable {
 
     // The names and order of the variables conform the output of the API.
-    // The variable mTitle serves for stage 2. I plan to add localization.
+    private int mId;
     private Double mVoteAverage;
     private String mTitle;
     private String mPosterPath;
     private String mOriginalTitle;
     private String mOverview;
     private String mReleaseDate;
+    private Double mPopularity;
 
 
     /**
      *  Simple constructor.
      */
-    public Movie() {
+    Movie() {
     }
 
     /**
@@ -32,18 +34,21 @@ public class Movie implements Parcelable {
      * @param in Incoming Parcel
      */
     private Movie(Parcel in) {
+        mId = in.readInt();
         mVoteAverage = in.readDouble();
         mTitle = in.readString();
         mPosterPath = in.readString();
         mOriginalTitle = in.readString();
         mOverview = in.readString();
         mReleaseDate = in.readString();
+        mPopularity = in.readDouble();
     }
 
     /**
-     * Gerenric creator.
+     * Generic creator.
      */
     public static final Creator<Movie> CREATOR = new Creator<Movie>() {
+
         @Override
         public Movie createFromParcel(Parcel in) {
             return new Movie(in);
@@ -73,15 +78,26 @@ public class Movie implements Parcelable {
      */
     @Override
     public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(mId);
         parcel.writeDouble(mVoteAverage);
         parcel.writeString(mTitle);
         parcel.writeString(mPosterPath);
         parcel.writeString(mOriginalTitle);
         parcel.writeString(mOverview);
         parcel.writeString(mReleaseDate);
+        parcel.writeDouble(mPopularity);
     }
 
      // Section for usual get-set methods.
+
+    /**
+     * Get the movie's Id.
+     *
+     * @return The id of the movie
+     */
+    public int getId() {
+        return mId;
+    }
 
     /**
      * Get the average of the votes.
@@ -140,6 +156,24 @@ public class Movie implements Parcelable {
     }
 
     /**
+     * Get the popularity.
+     *
+     * @return The popularity of the movie
+     */
+    public Double getPopularity () {
+        return mPopularity;
+    }
+
+
+    /**
+     * Set the movie's Id.
+     *
+     * @param id The id of the movie
+     */
+    public void setId(int id) {
+        mId = id;
+    }
+    /**
      * Set the average of the votes.
      *
      * @param voteAverage The average of te votes of this movie
@@ -192,5 +226,14 @@ public class Movie implements Parcelable {
      */
     public void setReleaseDate(String releaseDate) {
         mReleaseDate = releaseDate;
+    }
+
+    /**
+     * Set the popularity.
+     *
+     * @param popularity The popularity of the movie
+     */
+    public void setPopularity(Double popularity) {
+        mPopularity = popularity;
     }
 }

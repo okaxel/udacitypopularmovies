@@ -1,8 +1,8 @@
 <resources>
     <!-- Application and UI titles. -->
     <string name="app_name">Popular Movies</string>
-    <string name="app_name_and_version">Popular Movies Stage 1</string>
-    <string name="app_details_layout_name">Movie Detalis</string>
+    <string name="app_name_and_version">Popular Movies Stage 2</string>
+    <string name="app_details_layout_name">Movie Details</string>
 
     <!-- Keys -->
     <string name="key_sort_order" translatable="false">sortorder</string>
@@ -10,31 +10,46 @@
     <string name="key_parcelable_array" translatable="false">parcelablearray</string>
     <string name="key_intent_details" translatable="false">movieobject</string>
 
-    <!-- Toast messge -->
+    <!-- Toast messges -->
     <string name="msg_need_connection">The application needs network connection.</string>
+    <string name="msg_need_connection_first">You need to cennect to the internet at least once to have a movie database.</string>
+    <string name="msg_no_favourites_yet">No movies selected as favourite yet.</string>
+    <string name="msg_no_favourites_now">At the moment no movies selected as favourite.</string>
+    <string name="msg_no_movies_stored">Local database of movies is empty.</string>
+    <string name="msg_favourites_special_error">No favourites marked from current movies.</string>
 
     <!-- TheMovieDb API related strings -->
     <string name="api_location_base" translatable="false">http://api.themoviedb.org/3/movie/</string>
     <string name="api_request_method" translatable="false">GET</string>
     <string name="api_add_parameter" translatable="false">\?api_key=</string>
+    <string name="api_trailers_segment" translatable="false">/videos</string>
+    <string name="api_reviews_segment" translatable="false">/reviews</string>
+
+    <!-- TheMovieDb images -->
+    <string name="tmdb_image_location_base" translatable="false">http://image.tmdb.org/t/p/</string>
+    <string name="tmdb_image_resolution_path" translatable="false">w185/</string>
 
     <!-- TheMovieDb API JSON tag strings -->
     <string name="tag_json_result" translatable="false">results</string>
+    <string name="tag_json_id" translatable="false">id</string>
     <string name="tag_json_vote_average" translatable="false">vote_average</string>
     <string name="tag_json_title" translatable="false">title</string>
     <string name="tag_json_poster_path" translatable="false">poster_path</string>
     <string name="tag_json_original_title" translatable="false">original_title</string>
     <string name="tag_json_overview" translatable="false">overview</string>
     <string name="tag_json_release_date" translatable="false">release_date</string>
-
-    <!-- TheMovieDb images -->
-    <string name="tmdb_image_location_base" translatable="false">http://image.tmdb.org/t/p/</string>
-    <string name="tmdb_image_resolution_path" translatable="false">w185/</string>
+    <string name="tag_json_popularity" translatable="false">popularity</string>
+    <string name="tag_json_trailer_key" translatable="false">key</string>
+    <string name="tag_json_trailer_title" translatable="false">name</string>
+    <string name="tag_json_trailer_site" translatable="false">site</string>
+    <string name="tag_json_review_author" translatable="false">author</string>
+    <string name="tag_json_review_content" translatable="false">content</string>
 
     <!-- Sort order labels -->
     <string-array name="sort_order_values">
         <item>Most popular first</item>
         <item>Highest rated first</item>
+        <item>Marked as favourite</item>
     </string-array>
 
     <!-- Sort order directories -->
@@ -45,12 +60,24 @@
 
     <!-- Details Activity's texts -->
     <string name="cd_image_poster">Poster picture of te selected movie</string>
+    <string name="cd_play_button">Play button of the trailer</string>
     <string name="label_release_date">Release date</string>
-    <string name="lavel_voted_average">Voted average</string>
+    <string name="label_voted_average">Voted average</string>
+    <string name="label_reviews">Reviews</string>
+    <string name="label_trailers">Trailers</string>
 
-    <!-- Details Activity error messages -->
+    <!-- Details Activity error and status messages -->
     <string name="error_title">Neither title nor original title!</string>
     <string name="error_release_date">No release date!</string>
     <string name="error_vote_average">No vote information!</string>
     <string name="error_overview">No overview text!</string>
+    <string name="status_downloading_trailers">Downloading trailers from server&#8230;</string>
+    <string name="status_downloading_reviews">Downloading reviews data from server&#8230;</string>
+    <string name="status_no_trailers">No trailers found.</string>
+    <string name="status_no_reviews">No reviews found.</string>
+    <string name="status_connection_needed">To see content here the device most be connected.</string>
+
+    <!-- Strings needed to handle trailers -->
+    <string name="youtube_base_link" translatable="false">https://www.youtube.com/watch?v=</string>
+
 </resources>

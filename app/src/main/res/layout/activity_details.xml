@@ -12,7 +12,21 @@
         android:layout_height="wrap_content"
         android:id="@+id/tolbar_details"
         app:title="@string/app_details_layout_name"
-        android:theme="@style/DetailsToolbar"/>
+        android:gravity="end"
+        android:theme="@style/DetailsToolbar">
+
+        <android.support.v7.widget.AppCompatImageButton
+            android:id="@+id/imagebutton_favourite_change"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginEnd="6dp"
+            android:layout_marginRight="6dp"
+            android:background="@android:color/transparent"
+            android:clickable="true"
+            android:focusable="true"
+            app:srcCompat="@drawable/star_default" />
+    </android.support.v7.widget.Toolbar>
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -76,7 +90,7 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/tv_label_vote_average"
                         android:theme="@style/TextViewLabels"
-                        android:text="@string/lavel_voted_average"/>
+                        android:text="@string/label_voted_average"/>
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -93,6 +107,42 @@
                 android:id="@+id/tv_overview"
                 android:theme="@style/TextViewOverview"
                 tools:text="Overview"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/label_trailers"
+                android:text="@string/label_trailers"
+                android:theme="@style/TextViewSectionLabels"
+                android:textAlignment="center" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/status_trailers"
+                android:text="@string/status_downloading_trailers"
+                android:theme="@style/TextViewWarnConnected" />
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/rv_trailers">
+            </android.support.v7.widget.RecyclerView>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/label_reviews"
+                android:text="@string/label_reviews"
+                android:theme="@style/TextViewSectionLabels"
+                android:textAlignment="center" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/status_reviews"
+                android:text="@string/status_downloading_reviews"
+                android:theme="@style/TextViewWarnConnected" />
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/rv_reviews">
+            </android.support.v7.widget.RecyclerView>
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>

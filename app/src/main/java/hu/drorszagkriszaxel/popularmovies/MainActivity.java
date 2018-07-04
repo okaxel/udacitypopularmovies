@@ -1,10 +1,13 @@
 package hu.drorszagkriszaxel.popularmovies;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
@@ -14,8 +17,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.Toast;
+
+import hu.drorszagkriszaxel.popularmovies.datahandling.MoviesContract;
 
 /**
  *  Popular Movies App Stage 1 and 2
@@ -54,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -77,19 +84,29 @@ public class MainActivity extends AppCompatActivity {
 
         // If movies are locally avaliable, load it to GridView.
         if (savedInstanceState != null) {
+
             if ( savedInstanceState.containsKey(getString(R.string.key_parcelable_array))) {
+
                 Parcelable[] parcelables = savedInstanceState
                         .getParcelableArray(getString(R.string.key_parcelable_array));
+
                 if (parcelables != null) {
+
                     int moviesCount = parcelables.length;
                     Movie[] movies = new Movie[moviesCount];
+
                     for (int i=0; i < moviesCount; i++) {
                         movies[i] = (Movie) parcelables[i];
                     }
+
                     mGridView.setAdapter(new PosterAdapter(this, movies));
+                    BaseAdapter baseAdapter = (BaseAdapter) mGridView.getAdapter();
+                    baseAdapter.notifyDataSetChanged();
 
                 }
+
             }
+
         }
 
         // If GridView still don't have movies loaded, let's use internet
@@ -104,9 +121,11 @@ public class MainActivity extends AppCompatActivity {
      */
     @Override
     protected void onSaveInstanceState(Bundle outState) {
+
         outState.putInt(getString(R.string.key_sort_order),mSortOrder);
         outState.putInt(getString(R.string.key_gridview_position),mGridView.getFirstVisiblePosition());
         super.onSaveInstanceState(outState);
+
     }
 
     /**
@@ -116,6 +135,7 @@ public class MainActivity extends AppCompatActivity {
      */
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
+
         super.onRestoreInstanceState(savedInstanceState);
 
         if (savedInstanceState.containsKey(getString(R.string.key_sort_order)))
@@ -123,6 +143,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (savedInstanceState.containsKey(getString(R.string.key_gridview_position)))
             mGridView.smoothScrollToPosition(savedInstanceState.getInt(getString(R.string.key_gridview_position)));
+
     }
 
     /**
@@ -130,8 +151,10 @@ public class MainActivity extends AppCompatActivity {
      */
     @Override
     protected void onResume() {
+
         super.onResume();
         mSpinner.setSelection(mSortOrder);
+
     }
 
     // This section is for TMDB. Unfortunately it don't worth to put it into a separate class,
@@ -148,20 +171,23 @@ public class MainActivity extends AppCompatActivity {
      *
      * @return     TRUE if there there is network and device is connection or connected
      */
-    private boolean isConnected() {
+    public boolean isConnected() {
+
         ConnectivityManager manager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo info = null;
 
         if ( manager != null ) info = manager.getActiveNetworkInfo();
 
         return info != null && info.isConnectedOrConnecting();
+
     }
 
     /**
-     * Sets mGridView's adapter from TheMovieDB.
+     * Sets mGridView's adapter from TheMovieDB or from local database depending on various circumstances.
      */
     private void makeGridViewAdapter() {
-        if (isConnected()) {
+
+        if (isConnected() && (mSortOrder==0 || mSortOrder==1)) {
 
             String[] sortOrder = getResources().getStringArray(R.array.sort_order_path);
 
@@ -169,33 +195,224 @@ public class MainActivity extends AppCompatActivity {
                     + sortOrder[mSortOrder] + getString(R.string.api_add_parameter)
                     + TMDB_API_KEY;
 
-            GenericListener mListener = new GenericListener() {
+            GenericMovieListener mListener = new GenericMovieListener() {
                 @Override
                 public void GenericEventListener(Movie[] movies) {
+
                     mGridView.setAdapter(new PosterAdapter(getApplicationContext(), movies));
+                    BaseAdapter baseAdapter = (BaseAdapter) mGridView.getAdapter();
+                    baseAdapter.notifyDataSetChanged();
+
+                    int deletedRows = getContentResolver().delete(
+                            Uri.withAppendedPath(MoviesContract.BASE_CONTENT_URI,MoviesContract.PATH_MOVIES),
+                            null, null);
+
+                    ContentValues values = new ContentValues();
+
+                    for (Movie oneMovie: movies) {
+
+                        values.put(MoviesContract.MovieEntry.COLUMN_MOVIE_ID,oneMovie.getId());
+                        values.put(MoviesContract.MovieEntry.COLUMN_VOTE_AVERAGE,oneMovie.getVoteAverage());
+                        values.put(MoviesContract.MovieEntry.COLUMN_TITLE,oneMovie.getTitle());
+                        values.put(MoviesContract.MovieEntry.COLUMN_POSTER_PATH,oneMovie.getPosterPath());
+                        values.put(MoviesContract.MovieEntry.COLUMN_ORIGINAL_TITLE,oneMovie.getOriginalTitle());
+                        values.put(MoviesContract.MovieEntry.COLUMN_OVERVIEW,oneMovie.getOverview());
+                        values.put(MoviesContract.MovieEntry.COLUMN_RELEASE_DATE,oneMovie.getReleaseDate());
+                        values.put(MoviesContract.MovieEntry.COLUMN_POPULARITY,oneMovie.getPopularity());
+
+                        Uri insertedRow = getContentResolver().insert(
+                                Uri.withAppendedPath(MoviesContract.BASE_CONTENT_URI,MoviesContract.PATH_MOVIES),
+                                values);
+
+                    }
+
                 }
             };
 
-            // Because no hard-coded stinrgs are available, all the strings have to be given in the
-            // sontructur of the AsyncTask.
-            String[] mStrings = new String[9];
+            // Because no hard-coded strings are available, all the strings have to be given in the
+            // constructor of the AsyncTask.
+            String[] mStrings = new String[11];
             mStrings[0]=getString(R.string.app_name_and_version);
             mStrings[1]=getString(R.string.api_request_method);
             mStrings[2]=getString(R.string.tag_json_result);
-            mStrings[3]=getString(R.string.tag_json_vote_average);
-            mStrings[4]=getString(R.string.tag_json_title);
-            mStrings[5]=getString(R.string.tag_json_poster_path);
-            mStrings[6]=getString(R.string.tag_json_original_title);
-            mStrings[7]=getString(R.string.tag_json_overview);
-            mStrings[8]=getString(R.string.tag_json_release_date);
+            mStrings[3]=getResources().getString(R.string.tag_json_id);
+            mStrings[4]=getString(R.string.tag_json_vote_average);
+            mStrings[5]=getString(R.string.tag_json_title);
+            mStrings[6]=getString(R.string.tag_json_poster_path);
+            mStrings[7]=getString(R.string.tag_json_original_title);
+            mStrings[8]=getString(R.string.tag_json_overview);
+            mStrings[9]=getString(R.string.tag_json_release_date);
+            mStrings[10]=getResources().getString(R.string.tag_json_popularity);
 
-            ApiHandler mApiHandler = new ApiHandler(mListener,apiString,mStrings);
-            mApiHandler.execute();
+            MovieFromInternet mMovieFromInternet = new MovieFromInternet(mListener,apiString,mStrings);
+            mMovieFromInternet.execute();
 
         } else {
-            Toast.makeText(this,R.string.msg_need_connection,Toast.LENGTH_LONG)
-                    .show();
+
+            String sortOrder = null;
+            switch (mSortOrder) {
+                case 0: {
+                    sortOrder = MoviesContract.MovieEntry.COLUMN_POPULARITY + " ASC";
+                    break;
+                }
+                case 1: {
+                    sortOrder = MoviesContract.MovieEntry.COLUMN_VOTE_AVERAGE + " ASC";
+                    break;
+                }
+                case 2: {
+                    sortOrder = MoviesContract.MovieEntry.COLUMN_MOVIE_ID + " ASC";
+                    break;
+                }
+            }
+
+            String[] projection = {
+                    MoviesContract.MovieEntry.COLUMN_MOVIE_ID,
+                    MoviesContract.MovieEntry.COLUMN_VOTE_AVERAGE,
+                    MoviesContract.MovieEntry.COLUMN_TITLE,
+                    MoviesContract.MovieEntry.COLUMN_POSTER_PATH,
+                    MoviesContract.MovieEntry.COLUMN_ORIGINAL_TITLE,
+                    MoviesContract.MovieEntry.COLUMN_OVERVIEW,
+                    MoviesContract.MovieEntry.COLUMN_RELEASE_DATE,
+                    MoviesContract.MovieEntry.COLUMN_POPULARITY
+            };
+
+            Cursor cursor = getContentResolver().query(
+                    Uri.withAppendedPath(MoviesContract.BASE_CONTENT_URI,MoviesContract.PATH_MOVIES),
+                    projection,null,null, sortOrder);
+
+            if (cursor!=null) {
+
+                if (cursor.getCount()>0) {
+
+                    Movie[] movies = new Movie[cursor.getCount()];
+                    int localCounter = 0;
+
+                    while (cursor.moveToNext()) {
+
+                        movies[localCounter] = new Movie();
+                        movies[localCounter].setId(cursor.getInt(cursor.getColumnIndex(MoviesContract.MovieEntry.COLUMN_MOVIE_ID)));
+                        movies[localCounter].setVoteAverage(cursor.getDouble(cursor.getColumnIndex(MoviesContract.MovieEntry.COLUMN_VOTE_AVERAGE)));
+                        movies[localCounter].setTitle(cursor.getString(cursor.getColumnIndex(MoviesContract.MovieEntry.COLUMN_TITLE)));
+                        movies[localCounter].setPosterPath(cursor.getString(cursor.getColumnIndex(MoviesContract.MovieEntry.COLUMN_POSTER_PATH)));
+                        movies[localCounter].setOriginalTitle(cursor.getString(cursor.getColumnIndex(MoviesContract.MovieEntry.COLUMN_ORIGINAL_TITLE)));
+                        movies[localCounter].setOverview(cursor.getString(cursor.getColumnIndex(MoviesContract.MovieEntry.COLUMN_OVERVIEW)));
+                        movies[localCounter].setReleaseDate(cursor.getString(cursor.getColumnIndex(MoviesContract.MovieEntry.COLUMN_RELEASE_DATE)));
+                        movies[localCounter].setPopularity(cursor.getDouble(cursor.getColumnIndex(MoviesContract.MovieEntry.COLUMN_POPULARITY)));
+
+                        localCounter++;
+
+                    }
+
+                    if (mSortOrder==2) {
+
+                        String[] favProjection = {
+                                MoviesContract.FavouritesEntry.COLUMN_MOVIE_ID
+                        };
+                        Cursor favCursor = getContentResolver().query(
+                                Uri.withAppendedPath(MoviesContract.BASE_CONTENT_URI, MoviesContract.PATH_FAVOURITES),
+                                favProjection, null, null,
+                                MoviesContract.FavouritesEntry.COLUMN_MOVIE_ID + " ASC");
+
+                        if (favCursor != null) {
+                            if (favCursor.getCount() > 0) {
+
+                                Movie[] favMovies = new Movie[favCursor.getCount()];
+
+                                int favCounter = 0;
+
+                                while (favCursor.moveToNext()) {
+
+                                    favMovies[favCounter] = new Movie();
+                                    favMovies[favCounter] = getMovieById(movies,
+                                            favCursor.getInt(favCursor.getColumnIndex(MoviesContract.FavouritesEntry.COLUMN_MOVIE_ID)));
+                                    favCounter++;
+
+                                }
+
+                                if (favCounter>0 ) {
+
+                                    Movie[] finalListOfMovies = new Movie[favCounter];
+
+                                    java.lang.System.arraycopy(favMovies,0,finalListOfMovies,0,favCounter);
+
+                                    mGridView.setAdapter(new PosterAdapter(getApplicationContext(),finalListOfMovies));
+                                    BaseAdapter baseAdapter = (BaseAdapter) mGridView.getAdapter();
+                                    baseAdapter.notifyDataSetChanged();
+
+
+                                } else {
+
+                                    Toast.makeText(this, R.string.msg_favourites_special_error, Toast.LENGTH_LONG)
+                                            .show();
+
+                                }
+
+                            } else {
+
+                                Toast.makeText(this, R.string.msg_no_favourites_now, Toast.LENGTH_LONG)
+                                        .show();
+
+                            }
+                            favCursor.close();
+                        } else {
+
+                            Toast.makeText(this, R.string.msg_no_favourites_yet, Toast.LENGTH_LONG)
+                                    .show();
+
+                        }
+
+                    } else {
+
+                        mGridView.setAdapter(new PosterAdapter(getApplicationContext(), movies));
+                        BaseAdapter baseAdapter = (BaseAdapter) mGridView.getAdapter();
+                        baseAdapter.notifyDataSetChanged();
+
+                    }
+
+                } else {
+
+                    Toast.makeText(this,R.string.msg_no_movies_stored,Toast.LENGTH_LONG)
+                            .show();
+
+                }
+
+                cursor.close();
+
+            } else {
+
+                Toast.makeText(this,R.string.msg_need_connection_first,Toast.LENGTH_LONG)
+                        .show();
+
+            }
+
         }
+
+    }
+
+    /**
+     * Select favourite from the given array of movies.
+     *
+     * @param whereFrom The array, where all movies are stored
+     * @param id        The id to search for
+     * @return          The record that matches the given id
+     */
+    private Movie getMovieById(Movie[] whereFrom, int id) {
+
+        Movie returnMovie = new Movie();
+
+        for (Movie forMovie : whereFrom) {
+
+            if (forMovie.getId()==id) {
+
+                returnMovie = forMovie;
+                break;
+
+            }
+
+        }
+
+        return returnMovie;
+
     }
 
     // Sort order handling
@@ -204,18 +421,22 @@ public class MainActivity extends AppCompatActivity {
      * Gets the sort order value from SharedPreferences.
      */
     private void recallSortOrder() {
+
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         mSortOrder = preferences.getInt(getString(R.string.key_sort_order),0);
+
     }
 
     /**
      * Saves the sort order value to SharedPreferences.
      */
     private void saveSortOrder() {
+
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt(getString(R.string.key_sort_order),mSortOrder);
         editor.apply();
+
     }
 
     // In-class objects hereafter.
@@ -235,9 +456,11 @@ public class MainActivity extends AppCompatActivity {
          */
         @Override
         public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
             mSortOrder = i;
             saveSortOrder();
             makeGridViewAdapter();
+
         }
 
         /**
